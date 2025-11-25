@@ -13,7 +13,7 @@ env/
 
 
 # Ignore all files named 'settings.json' in any directory
-**/future.txt
+future.txt
 
 # Ignore Flask and Database Files
 instance/
