@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Dashboard | BudgetBuddy</title>
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <style>
+            body {
+                background-color: #f8f9fa;
+            }
+
+            /* Desktop Sidebar */
+            .sidebar {
+                width: 250px;
+                position: fixed;
+                height: 100vh;
+                background-color: #212529;
+                color: #fff;
+                padding: 1.5rem 1rem;
+            }
+
+            .sidebar .nav-link {
+                color: #bbb;
+                margin: 5px 0;
+                border-radius: 5px;
+                transition: 0.3s;
+            }
+
+            .sidebar .nav-link:hover,
+            .sidebar .nav-link.active {
+                background-color: #0d6efd;
+                color: #fff;
+            }
+
+            /* Main content offset for desktop */
+            .content {
+                margin-left: 260px;
+                padding: 2rem;
+            }
+
+            @media (max-width: 992px) {
+
+                /* Remove desktop sidebar offset on smaller screens */
+                .content {
+                    margin-left: 0;
+                    padding: 1rem;
+                }
+            }
+
+            .card-sticky {
+                position: relative;
+            }
+
+            @media (max-width: 768px) {
+
+                /* Adjust for smaller screens */
+                .card-sticky {
+                    position: fixed;
+                    top: 20px;
+                    /* Adjust top position for a little gap */
+                    right: 20px;
+                    /* Stick to the right edge */
+                    width: auto;
+                    /* Adjust width if necessary */
+                    z-index: 999;
+                    /* Ensure it appears above other content */
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <!-- Mobile Offcanvas Toggle Button -->
+        <div class="d-lg-none p-2 bg-dark text-white">
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+                Menu
+            </button>
+        </div>
+
+        <!-- Desktop Sidebar -->
+        <nav class="sidebar d-none d-lg-block">
+            <div class="d-flex align-items-center mb-4">
+                <!-- Profile Image -->
+                <a href="/profile" class="me-2">
+                    <img src="{{ current_user.profile_picture if current_user.is_authenticated and current_user.profile_picture else 'https://img.icons8.com/?size=100&id=103539&format=png&color=000000' }}" alt="Profile Picture" class="rounded-circle" width="40" height="40">
+                </a>
+                <!-- Title -->
+                <h4 class="fw-bold text-white m-0">BudgetBuddy</h4>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="/dashboard" class="nav-link d-flex align-items-center {% if request.path == '/dashboard' %}active{% endif %}">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                            <path d="M5 4h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" />
+                            <path d="M5 16h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" />
+                            <path d="M15 12h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" />
+                            <path d="M15 4h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" />
+                        </svg>
+
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="/transactions" class="nav-link d-flex align-items-center {% if request.path == '/transactions' %}active{% endif %}">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                            <path d="M12 19h-6a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5" />
+                            <path d="M3 10h18" />
+                            <path d="M16 19h6" />
+                            <path d="M19 16l3 3l-3 3" />
+                            <path d="M7.005 15h.005" />
+                            <path d="M11 15h2" />
+                        </svg>
+
+                        <span>Transactions</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="/analytics" class="nav-link d-flex align-items-center {% if request.path == '/analytics' %}active{% endif %}">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                            <path d="M3 4m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z" />
+                            <path d="M7 20l10 0" />
+                            <path d="M9 16l0 4" />
+                            <path d="M15 16l0 4" />
+                            <path d="M8 12l3 -3l2 2l3 -3" />
+                        </svg>
+
+                        <span>Chart & Analytics</span>
+                    </a>
+                </li>
+
+
+
+                <li class="nav-item">
+                    <a href="/profile" class="nav-link d-flex align-items-center {% if request.path == '/profile' %}active{% endif %}">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                            <path d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        </svg>
+
+                        <span>Profile</span>
+                    </a>
+                </li>
+
+
+            </ul>
+            <hr class="border-light">
+            <a href="/logout" class="btn btn-outline-light w-100 mt-3">Logout</a>
+        </nav>
+
+        <!-- Mobile Offcanvas Sidebar -->
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebar">
+            <div class="offcanvas-header bg-dark text-white d-flex align-items-center">
+                <img src="{{ current_user.profile_picture if current_user.is_authenticated and current_user.profile_picture else 'https://img.icons8.com/?size=100&id=103539&format=png&color=ffffff' }}" alt="Profile Picture" class="rounded-circle me-2" width="40" height="40">
+                <h5 class="offcanvas-title mb-0">BudgetBuddy</h5>
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="nav flex-column">
+                    <!-- Dashboard -->
+                    <li class="nav-item mb-2">
+                        <a href="/dashboard" class="nav-link d-flex align-items-center {% if request.path == '/dashboard' %}active{% endif %}">
+                            <svg width="24" height="24" class="me-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 4h4a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1" />
+                                <path d="M5 16h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1" />
+                                <path d="M15 12h4a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1" />
+                                <path d="M15 4h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1" />
+                            </svg>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <!-- Transactions -->
+                    <li class="nav-item mb-2">
+                        <a href="/transactions" class="nav-link d-flex align-items-center {% if request.path == '/transactions' %}active{% endif %}">
+                            <svg width="24" height="24" class="me-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 19h-6a3 3 0 0 1-3-3v-8a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v4.5" />
+                                <path d="M3 10h18" />
+                                <path d="M16 19h6" />
+                                <path d="M19 16l3 3-3 3" />
+                                <path d="M7.005 15h.005" />
+                                <path d="M11 15h2" />
+                            </svg>
+                            <span>Transactions</span>
+                        </a>
+                    </li>
+
+                    <!-- Analytics -->
+                    <li class="nav-item mb-2">
+                        <a href="/analytics" class="nav-link d-flex align-items-center {% if request.path == '/analytics' %}active{% endif %}">
+                            <svg width="24" height="24" class="me-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 4m0 1a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-16a1 1 0 0 1-1-1z" />
+                                <path d="M7 20l10 0" />
+                                <path d="M9 16l0 4" />
+                                <path d="M15 16l0 4" />
+                                <path d="M8 12l3-3 2 2 3-3" />
+                            </svg>
+                            <span>Chart & Analytics</span>
+                        </a>
+                    </li>
+
+                    <!-- Profile -->
+                    <li class="nav-item mb-2">
+                        <a href="/profile" class="nav-link d-flex align-items-center {% if request.path == '/profile' %}active{% endif %}">
+                            <svg width="24" height="24" class="me-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+                <hr class="border-light">
+                <a href="/logout" class="btn btn-outline-dark w-100 mt-3">Logout</a>
+            </div>
+        </div>
+
+
+        <!-- Main Content -->
+        <div class="content">
+            <div class="container-fluid">
+
+                <!-- Flash messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div id="flash-messages" class="mt-3">
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Header -->
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+                    <div>
+                        <h1 class="fw-bold text-primary">Dashboard</h1>
+                        <p class="text-muted mb-0">Your financial summary overview.</p>
+                    </div>
+                    <!-- Sticky card -->
+                    <div class="card border-0 shadow-sm bg-primary px-4 py-3 text-end sticky-card">
+                        <p class="mb-0 fs-5 text-white">👋 <strong>Hi, {{ current_user.username.capitalize() }}</strong></p>
+                        <small class="text-white">Here’s your financial overview</small>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="row text-center mb-5">
+                    <div class="col-12 col-md-4 mb-3">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-body">
+                                <h6 class="text-uppercase text-success fw-bold">Total Income</h6>
+                                <h2 class="fw-bold text-success">${{ total_income or 0 }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 mb-3">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-body">
+                                <h6 class="text-uppercase text-danger fw-bold">Total Expenses</h6>
+                                <h2 class="fw-bold text-danger">${{ total_expenses or 0 }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 mb-3">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-body">
+                                <h6 class="text-uppercase text-primary fw-bold">Balance</h6>
+                                <h2 class="fw-bold text-primary">${{ balance or 0 }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="row mb-5">
+                    <div class="col-12 col-lg-6 mb-4">
+                        <div class="card shadow-sm h-100 text-center">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0">Income vs Expenses</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="incomeExpenseChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 mb-4">
+                        <div class="card shadow-sm h-100 text-center">
+                            <div class="card-header bg-secondary text-white">
+                                <h6 class="mb-0">Category Breakdown</h6>
+                            </div>
+                            <div class="card-body">
+                                <!-- Chart.js canvas element -->
+                                <canvas id="categoryChart"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- Line chart for Income and Expense Trends -->
+                    <div class="row">
+                        <div class="col-12">
+                            <canvas id="trendChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Recent Transactions</h6>
+                        <a href="/transactions" class="text-white-50 small text-decoration-none">View All →</a>
+                    </div>
+                    <div class="card-body p-0 table-responsive">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if transactions %}
+                                    {% for txn in transactions %}
+                                        <tr>
+                                            <td>{{ txn.date }}</td>
+                                            <td>{{ txn.description }}</td>
+                                            <td>{{ txn.category }}</td>
+                                            <td>
+                                                {% if txn.type == 'income' %}
+                                                    <span class="text-success fw-bold">+${{ txn.amount }}</span>
+                                                {% else %}
+                                                    <span class="text-danger fw-bold">-${{ txn.amount }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if txn.type == 'income' %}
+                                                    <span class="badge bg-success">Income</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Expenses</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted py-3">No transactions yet.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center py-3 bg-dark text-light mt-4">
+            &copy; {{ current_year or 2025 }} BudgetBuddy
+        </footer>
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <!-- Auto-dismiss flash messages -->
+        <script>
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => bootstrap.Alert.getOrCreateInstance(alert).close());
+            }, 4000);
+        </script>
+
+        <script>
+            // Line chart for Income and Expense Trends
+            const ctx = document.getElementById('trendChart').getContext('2d');
+
+            // Fetch data dynamically
+            fetch("/dashboard/data")
+                .then(response => response.json())
+                .then(data => {
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data.dates,
+                            datasets: [{
+                                label: 'Income',
+                                data: data.income,
+                                borderColor: '#28a745',
+                                fill: false
+                            },
+                                {
+                                    label: 'Expenses',
+                                    data: data.expenses,
+                                    borderColor: '#dc3545',
+                                    fill: false
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Income & Expense Trends'
+                                }
+                            },
+                            interaction: {
+                                mode: 'index',
+                                intersect: false
+                            }
+                        }
+                    });
+                })
+                .catch(err => console.error("Failed to fetch analytics data:", err));
+
+
+            fetch("/dashboard/data")
+                .then(response => response.json())
+                .then(data => {
+                    // Doughnut chart for Income vs Expenses
+                    new Chart(document.getElementById('incomeExpenseChart'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Income', 'Expenses'],
+                            datasets: [{
+                                data: [data.total_income || 0, data.total_expenses || 0],
+                                backgroundColor: ['#0d6efd', '#dc3545']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Income vs Expenses'
+                                }
+                            }
+                        }
+                    });
+
+                    // Pie chart for Category breakdown (Percent of income spent on each category)
+                    const ctx = document.getElementById('categoryChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: data.categories.length ? data.categories : ['No categories'],
+                            datasets: [{
+                                label: 'Percentage of Income Spent on Categories',
+                                data: data.percentages.length ? data.percentages : [0], // Ensure empty data is handled
+                                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4CAF50', '#FFB74D'], // Custom colors
+                                hoverBackgroundColor: ['#FF4C6B', '#1E88E5', '#FFB74D', '#66BB6A', '#FFB300']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Percentage of Income Spent on Categories'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(tooltipItem) {
+                                            return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(2) + '%'; // Show percentage in tooltip
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(err => console.error("Failed to fetch dashboard data:", err));
+        </script>
+
+
+
+    </body>
+
+</html>

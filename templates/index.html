@@ -1,0 +1,419 @@
+{% extends "layout.html" %}
+
+{% block title %}BudgetBuddy | Smart Personal Finance tracker{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    #home {
+        background: linear-gradient(135deg, #0d6efd 0%, #41b8d5 100%);
+        color: white;
+        text-align: center;
+        padding: 120px 20px 80px 20px;
+    }
+
+    #home h1 {
+        font-size: 3rem;
+        font-weight: 700;
+    }
+
+    #home p.lead {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        margin-bottom: 30px;
+    }
+
+    .btn-cta {
+        background-color: #ffffff;
+        color: #0d6efd;
+        font-weight: bold;
+        padding: 12px 35px;
+        border-radius: 30px;
+        transition: 0.3s;
+    }
+
+    .btn-cta:hover {
+        background-color: #0b5ed7;
+        color: #fff;
+    }
+     .card {
+        border-radius: 12px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+
+
+    /* Feature Icons */
+    .feature-icon {
+        font-size: 3rem;
+        color: #0d6efd;
+        margin-bottom: 15px;
+    }
+
+    /* Section spacing */
+    section {
+        padding: 80px 0;
+    }
+
+    /* Contact Section */
+    .contact-wrapper {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+    }
+
+    .contact-info {
+        background: linear-gradient(135deg, #0062cc, #0096ff);
+        padding: 40px;
+        color: white;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .contact-item:hover {
+        transform: translateX(10px);
+    }
+
+    .contact-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+
+    .social-links {
+        margin-top: 30px;
+    }
+
+    .social-icon {
+        width: 35px;
+        height: 35px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .social-icon:hover {
+        background: white;
+        color: #0062cc;
+        transform: translateY(-3px);
+    }
+
+    .contact-form {
+        padding: 40px;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        padding: 12px 15px;
+        border: 2px solid #eee;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #0062cc;
+        box-shadow: none;
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #0062cc, #0096ff);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,98,204,0.3);
+    }
+
+    .map-container {
+        height: 200px;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+</style>
+
+
+
+{% endblock %}
+
+{% block main %}
+
+<!-- Hero Section -->
+<section id="home">
+    <div class="container">
+        <h1>Take Control of Your Money</h1>
+        <p class="lead">A simple, powerful finance manager that helps you understand where your money goes.</p>
+        <a href="/register" class="btn btn-cta">Get Started</a>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5 text-primary">Why BudgetBuddy?</h2>
+        <div class="row g-4">
+
+            <!-- Card 1: Track & Analyze -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-line fa-2x mb-3 text-primary"></i>
+                        <h5 class="card-title">Track & Analyze</h5>
+                        <p class="card-text">
+                            Monitor your expenses in real time and visualize spending patterns
+                            with clean dashboards and analytics designed to give you clarity.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Budget Smarter -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-wallet fa-2x mb-3 text-primary"></i>
+                        <h5 class="card-title">Budget Smarter</h5>
+                        <p class="card-text">
+                            Set spending limits, categorize transactions, and stay on top of
+                            your monthly budget with intuitive tools that keep you in control.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Secure & Accessible -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-cloud fa-2x mb-3 text-primary"></i>
+                        <h5 class="card-title">Secure & Accessible</h5>
+                        <p class="card-text">
+                            Sync your data securely across devices. Access your financial
+                            insights anytime, anywhere, with confidence and peace of mind.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: Smart Alerts -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-bell fa-2x mb-3 text-primary"></i>
+                        <h5 class="card-title">Smart Alerts</h5>
+                        <p class="card-text">
+                            Get personalized notifications when you approach spending limits
+                            or when unusual activity is detected, helping you stay proactive.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5: Actionable Insights -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-lightbulb fa-2x mb-3 text-primary"></i>
+                        <h5 class="card-title">Actionable Insights</h5>
+                        <p class="card-text">
+                            BudgetBuddy turns complex data into simple, actionable insights
+                            so you can make smarter financial decisions every day.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6: Confidence & Control -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-hand-holding-usd fa-2x mb-3 text-primary"></i>
+                        <h5 class="card-title">Confidence & Control</h5>
+                        <p class="card-text">
+                            Gain confidence in your financial decisions. BudgetBuddy empowers
+                            you to manage money proactively and take control of your future.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Features Section -->
+<section id="features" class="bg-white">
+    <div class="container">
+        <h2 class="text-center mb-5 text-primary">Features</h2>
+        <div class="row text-center g-4">
+
+            <div class="col-md-4">
+                <i class="bi bi-graph-up-arrow feature-icon"></i>
+                <h4>Smart Analytics</h4>
+                <p>Analyze spending patterns, monthly cash flow, and category-wise breakdowns with clear charts.</p>
+            </div>
+
+            <div class="col-md-4">
+                <i class="bi bi-wallet2 feature-icon"></i>
+                <h4>Track Every Transaction</h4>
+                <p>Easily log incomes and expenses, categorize them, and view historical data anytime.</p>
+            </div>
+
+            <div class="col-md-4">
+                <i class="bi bi-file-earmark-text feature-icon"></i>
+                <h4>Generate Reports</h4>
+                <p>Export your financial summaries as PDF reports for your personal records or budgeting.</p>
+            </div>
+
+        </div>
+
+        <div class="row text-center mt-4 g-4">
+            <div class="col-md-4">
+                <i class="bi bi-shield-lock feature-icon"></i>
+                <h4>Secure & Private</h4>
+                <p>Your data stays yours. Password-protected accounts with secure hashing.</p>
+            </div>
+
+            <div class="col-md-4">
+                <i class="bi bi-phone feature-icon"></i>
+                <h4>Mobile-Friendly UI</h4>
+                <p>Designed to work seamlessly on all screen sizes — phones, tablets, and desktop.</p>
+            </div>
+
+            <div class="col-md-4">
+                <i class="bi bi-brush feature-icon"></i>
+                <h4>Clean User Experience</h4>
+                <p>Minimalistic, intuitive layout that makes finance management effortless.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-5 bg-light">
+    <div class="container py-4">
+        <h2 class="text-center mb-5 text-primary">Contact</h2>
+        <div class="row g-0 justify-content-center">
+            <div class="col-lg-10">
+                <div class="contact-wrapper">
+                    <div class="row g-0">
+
+                        <!-- Contact Info -->
+                        <div class="col-md-5">
+                            <div class="contact-info h-100">
+                                <h3 class="mb-4">Get in touch</h3>
+                                <p class="mb-4">We'd love to hear from you. Please fill out the form or contact us using the information below.</p>
+
+                                <div class="contact-item">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0">Address</h6>
+                                        <p class="mb-0">123 Business Avenue, Suite 100<br>New York, NY 10001</p>
+                                    </div>
+                                </div>
+
+                                <div class="contact-item">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0">Phone</h6>
+                                        <p class="mb-0">+1 (555) 123-4567</p>
+                                    </div>
+                                </div>
+
+                                <div class="contact-item">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0">Email</h6>
+                                        <p class="mb-0">contact@company.com</p>
+                                    </div>
+                                </div>
+
+                                <div class="social-links">
+                                    <h6 class="mb-3">Follow Us</h6>
+                                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Form -->
+                        <div class="col-md-7">
+                            <div class="contact-form">
+                                <h3 class="mb-4">Send us a message</h3>
+                                <form method="POST" action="{{ url_for('index') }}">
+                                    <div class="row g-3">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">First Name</label>
+                                            <input type="text" class="form-control" name="first_name" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Last Name</label>
+                                            <input type="text" class="form-control" name="last_name" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" name="email" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Subject</label>
+                                        <input type="text" class="form-control" name="subject" required>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Message</label>
+                                        <textarea class="form-control" rows="5" name="message"
+                                                  placeholder="Your message here..." required></textarea>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-submit text-white">Send Message</button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

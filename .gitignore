@@ -1,0 +1,29 @@
+# Ignore Python Bytecode Files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Ignore Virtual Environments
+venv/
+env/
+
+# Ignore .env file containing sensitive data
+.env
+
+
+# Ignore Flask and Database Files
+instance/
+*.db
+*.sqlite
+
+# Ignore PyCharm, VSCode, and other IDE configuration files
+.idea/
+.vscode/
+
+# Ignore log files
+*.log
+
+# Ignore OS-specific files (macOS/Windows)
+.DS_Store
+Thumbs.db
