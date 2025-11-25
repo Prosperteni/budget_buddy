@@ -10,8 +10,8 @@ env/
 
 # Ignore .env file containing sensitive data
 .env
-
-
+future.txt
+CS50 Final Project Personal Finance.md
 # Ignore Flask and Database Files
 instance/
 *.db
