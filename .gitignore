@@ -11,9 +11,8 @@ env/
 # Ignore .env file containing sensitive data
 .env
 
-
 # Ignore all files named 'settings.json' in any directory
-future.txt
+future/
 
 # Ignore Flask and Database Files
 instance/
