@@ -1,5 +1,7 @@
 # BudgetBuddy
 
+## Video Demo:  <URL [URL](https://youtu.be/FMA98X8MO6M)>
+
 **BudgetBuddy** is a personal finance management application designed to help users track their expenses, analyze their spending patterns, and manage their budget efficiently. Built with Flask, Bootstrap, and Python, BudgetBuddy aims to provide an intuitive interface and a variety of features to make personal finance management easier and more accessible.
 
 ## Features
