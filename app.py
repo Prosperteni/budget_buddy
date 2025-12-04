@@ -60,6 +60,51 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+# -------------------- Database Setup Function --------------------
+def init_db():
+    try:
+        # Use the same database name 'finance.db'
+        conn = sqlite3.connect("finance.db")
+        cursor = conn.cursor()
+        
+        # 1. Create the users table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL UNIQUE,
+                hash TEXT NOT NULL
+            );
+        """)
+        
+        # 2. Create the transactions table (Crucial, as your app relies on it)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS transactions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                description TEXT NOT NULL,
+                category TEXT NOT NULL,
+                type TEXT NOT NULL,
+                amount REAL NOT NULL,
+                date TEXT NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            );
+        """)
+
+        conn.commit()
+        print("Database setup complete: users and transactions tables ensured.")
+    except Exception as e:
+        print(f"Error during database initialization: {e}")
+    finally:
+        if conn:
+            conn.close()
+
+# -------------------- Server Start --------------------
+if __name__ == "__main__":
+    init_db() 
+    
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=8080)
+
 # -------------------- Routes --------------------
 
 
@@ -537,7 +582,3 @@ def download_report():
 # Register Blueprint
 app.register_blueprint(report_bp)
 
-
-if __name__ == "__main__":
-    from waitress import serve
-    serve(app, host="0.0.0.0", port=8080)
