@@ -14,15 +14,10 @@ env/
 # Ignore all files named 'settings.json' in any directory
 future/
 
-<<<<<<< HEAD
 # # Ignore Flask and Database Files
 # instance/
 # *.db
 # *.sqlite
-=======
-# Ignore Flask and Database Files
-
->>>>>>> b4198ab1e2743dd6a60b26afd3ff8979e818852a
 
 # Ignore PyCharm, VSCode, and other IDE configuration files
 .idea/
