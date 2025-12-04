@@ -1,4 +1,3 @@
-
 from flask import Flask, flash, redirect, render_template, request, url_for, Blueprint, send_file, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
@@ -59,6 +58,41 @@ def get_db_connection():
     conn = sqlite3.connect("finance.db")
     conn.row_factory = sqlite3.Row
     return conn
+
+# -------------------- Database Setup Function --------------------
+def init_db():
+    try:
+        # Use the same database name 'finance.db'
+        conn = sqlite3.connect("finance.db")
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL UNIQUE,
+                hash TEXT NOT NULL
+            );
+        """)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS transactions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                description TEXT NOT NULL,
+                category TEXT NOT NULL,
+                type TEXT NOT NULL,
+                amount REAL NOT NULL,
+                date TEXT NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            );
+        """)
+
+        conn.commit()
+        print("Database setup complete: users and transactions tables ensured.")
+    except Exception as e:
+        print(f"Error during database initialization: {e}")
+    finally:
+        if conn:
+            conn.close()
 
 # -------------------- Routes --------------------
 
@@ -536,3 +570,17 @@ def download_report():
 
 # Register Blueprint
 app.register_blueprint(report_bp)
+
+
+# -------------------- Server Start --------------------
+if __name__ == "__main__":
+    # 1. Initialize the database tables
+    init_db()  
+    
+    # 2. Configure port for local development or deployment
+    import os # Import os if it's not already imported at the top
+    port = int(os.environ.get('PORT', 8080))
+
+    # 3. Start the server (Waitress)
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=port)
