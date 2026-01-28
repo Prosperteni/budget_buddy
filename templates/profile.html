@@ -1,61 +1,669 @@
 {% extends "layout_LoggedIn.html" %}
-
 {% block title %}Profile | BudgetBuddy{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #0d6efd;
+        --accent: #41b8d5;
+        --success: #198754;
+        --danger: #dc3545;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --bg-light: #f8fafc;
+        --border: #e2e8f0;
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, #0d6efd 0%, #41b8d5 100%);
+        border-radius: 16px;
+        padding: 3rem 2rem;
+        color: white;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .profile-header > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .profile-avatar {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: 4px solid white;
+        object-fit: cover;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease;
+    }
+
+    .profile-avatar:hover {
+        transform: scale(1.05);
+    }
+
+    .profile-header-content {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .profile-header-info h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-header-info p {
+        opacity: 0.9;
+        margin-bottom: 0;
+        font-size: 1rem;
+    }
+
+    .profile-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .stat-item {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 1rem;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+    }
+
+    .stat-item-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        display: block;
+    }
+
+    .stat-item-label {
+        font-size: 0.85rem;
+        opacity: 0.85;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--text-primary);
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--border);
+        position: relative;
+    }
+
+    .section-title::before {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--accent));
+        border-radius: 2px;
+    }
+
+    .card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        margin-bottom: 2rem;
+    }
+
+    .card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        border-color: var(--accent);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        border: none;
+        border-bottom: none;
+        padding: 1.25rem;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .card-header h6 {
+        margin: 0;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .card-body {
+        padding: 1.75rem;
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+    }
+
+    .form-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .form-section-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.95rem;
+    }
+
+    .form-control {
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .profile-picture-section {
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .profile-picture-container {
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-picture-img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 4px solid var(--primary);
+        object-fit: cover;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .profile-picture-img:hover {
+        transform: scale(1.05);
+    }
+
+    .btn {
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 10px 24px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+        background: linear-gradient(135deg, #0b5ed7, #0ba5a5);
+        color: white;
+    }
+
+    .btn-success {
+        background: var(--success);
+        color: white;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(25, 135, 84, 0.3);
+        background: #157347;
+        color: white;
+    }
+
+    .btn-warning {
+        background: #ffc107;
+        color: #000;
+    }
+
+    .btn-warning:hover {
+        background: #e0a800;
+        color: #000;
+        transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+        background: var(--text-secondary);
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #5a6b7a;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-outline-primary {
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        background: transparent;
+    }
+
+    .btn-outline-primary:hover {
+        background: var(--primary);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .password-strength {
+        height: 6px;
+        background: #e9ecef;
+        border-radius: 3px;
+        margin-top: 0.5rem;
+        overflow: hidden;
+    }
+
+    .password-strength-bar {
+        height: 100%;
+        width: 0%;
+        border-radius: 3px;
+        transition: all 0.3s ease;
+    }
+
+    .password-strength-bar.weak {
+        width: 33%;
+        background: #dc3545;
+    }
+
+    .password-strength-bar.fair {
+        width: 66%;
+        background: #ffc107;
+    }
+
+    .password-strength-bar.strong {
+        width: 100%;
+        background: #198754;
+    }
+
+    .info-box {
+        background: linear-gradient(135deg, rgba(13, 110, 253, 0.08), rgba(65, 184, 213, 0.08));
+        border-left: 4px solid var(--primary);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-box p {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .danger-zone {
+        border: 2px solid var(--danger);
+        padding: 1.5rem;
+        border-radius: 8px;
+        background: rgba(220, 53, 69, 0.05);
+        margin-top: 2rem;
+    }
+
+    .danger-zone-title {
+        color: var(--danger);
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .danger-zone-text {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-danger {
+        background: var(--danger);
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #bb2d3b;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+    }
+
+    .header-action {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .header-action .btn {
+        padding: 10px 24px;
+    }
+
+    @media (max-width: 768px) {
+        .profile-header {
+            padding: 2rem 1.5rem;
+        }
+
+        .profile-header-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+        }
+
+        .profile-header-info h1 {
+            font-size: 1.5rem;
+        }
+
+        .profile-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .header-action {
+            flex-direction: column;
+        }
+
+        .header-action .btn {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+        }
+
+        .profile-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        .form-control {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 
-<!-- Header -->
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
-    <div>
-        <h1 class="fw-bold text-primary">Profile</h1>
-        <p class="text-muted mb-0">Manage your personal information and account settings.</p>
+<!-- Profile Header -->
+<div class="profile-header">
+    <div class="profile-header-content">
+        <img src="{{ current_user.profile_picture or 'https://img.icons8.com/?size=100&id=103539&format=png&color=ffffff' }}" 
+             alt="{{ current_user.username }}" class="profile-avatar">
+        <div class="profile-header-info">
+            <h1>{{ current_user.username }}</h1>
+            <p>Member since {{ current_user.created_at.strftime('%B %Y') if current_user.created_at else 'Recently' }}</p>
+        </div>
     </div>
 
-    <a href="/download_report" class="btn btn-primary fw-bold">
-        Download PDF Report
+    <!-- Profile Statistics -->
+    <div class="profile-stats">
+        <div class="stat-item">
+            <span class="stat-item-value" id="total-transactions">0</span>
+            <span class="stat-item-label">Transactions</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-item-value" id="account-balance">$0</span>
+            <span class="stat-item-label">Account Balance</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-item-value" id="monthly-savings">$0</span>
+            <span class="stat-item-label">Monthly Savings</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-item-value" id="budget-health">--</span>
+            <span class="stat-item-label">Budget Health</span>
+        </div>
+    </div>
+</div>
+
+<!-- Page Header -->
+<div class="header-action">
+    <div>
+        <h2 class="fw-bold text-primary mb-1">Account Settings</h2>
+        <p class="text-muted mb-0">Manage your profile, security, and preferences</p>
+    </div>
+    <a href="/download_report" class="btn btn-primary align-self-start">
+        <i class="bi bi-download me-2"></i>Download PDF Report
     </a>
 </div>
 
-<!-- Profile Picture -->
-<div class="card shadow-sm border-0 mb-4">
-    <div class="card-header bg-dark text-white">
-        <h6 class="mb-0">Profile Picture</h6>
+<!-- Profile Picture Section -->
+<div class="card border-0">
+    <div class="card-header">
+        <h6><i class="bi bi-image me-2"></i>Profile Picture</h6>
     </div>
-    <div class="card-body text-center">
-        <img src="{{ current_user.profile_picture or 'https://img.icons8.com/?size=100&id=103539&format=png&color=000000' }}"
-             class="rounded-circle mb-3" width="120" height="120">
-        <button class="btn btn-primary">Change Picture</button>
+    <div class="card-body">
+        <div class="profile-picture-section">
+            <div class="profile-picture-container">
+                <img src="{{ current_user.profile_picture or 'https://img.icons8.com/?size=100&id=103539&format=png&color=000000' }}" 
+                     alt="{{ current_user.username }}" class="profile-picture-img">
+            </div>
+            <p class="text-muted mb-3">Current profile picture</p>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#profilePictureModal">
+                <i class="bi bi-camera me-2"></i>Change Picture
+            </button>
+        </div>
     </div>
 </div>
 
-<!-- Personal Info -->
-<div class="card shadow-sm border-0 mb-4">
-    <div class="card-header bg-primary text-white">
-        <h6 class="mb-0">Personal Information</h6>
+<!-- Personal Information -->
+<div class="card border-0">
+    <div class="card-header">
+        <h6><i class="bi bi-person me-2"></i>Personal Information</h6>
     </div>
     <div class="card-body">
-        <form method="POST">
-            <input class="form-control mb-3" name="username" value="{{ current_user.username }}">
-            <input class="form-control mb-3" name="email" value="{{ current_user.email }}">
-            <textarea class="form-control mb-3" name="bio">{{ current_user.bio }}</textarea>
-            <button class="btn btn-success">Save Changes</button>
+        <form method="POST" action="/profile/update">
+            <div class="form-section">
+                <span class="form-section-label">Basic Information</span>
+                
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username" value="{{ current_user.username }}" required>
+                    <small class="text-muted d-block mt-2">Your unique identifier on BudgetBuddy</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-control" name="email" value="{{ current_user.email }}" required>
+                    <small class="text-muted d-block mt-2">We'll never share your email with anyone</small>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" name="full_name" value="{{ current_user.full_name or '' }}" placeholder="Optional">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Bio / About</label>
+                    <textarea class="form-control" name="bio" placeholder="Tell us a little about yourself...">{{ current_user.bio or '' }}</textarea>
+                    <small class="text-muted d-block mt-2">Max 250 characters</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" name="phone" value="{{ current_user.phone or '' }}" placeholder="Optional">
+                </div>
+            </div>
+
+            <div class="info-box">
+                <p><i class="bi bi-info-circle me-2"></i>Keep your information up to date to improve your BudgetBuddy experience.</p>
+            </div>
+
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle me-2"></i>Save Changes
+            </button>
         </form>
     </div>
 </div>
 
 <!-- Change Password -->
-<div class="card shadow-sm border-0 mb-4">
-    <div class="card-header bg-secondary text-white">
-        <h6 class="mb-0">Change Password</h6>
+<div class="card border-0">
+    <div class="card-header">
+        <h6><i class="bi bi-shield-lock me-2"></i>Security Settings</h6>
     </div>
     <div class="card-body">
-        <form method="POST" action="/change_password">
-            <input type="password" class="form-control mb-3" name="old_password" placeholder="Old password">
-            <input type="password" class="form-control mb-3" name="new_password" placeholder="New password">
-            <input type="password" class="form-control mb-3" name="confirm_new_password" placeholder="Confirm password">
-            <button class="btn btn-warning">Change Password</button>
+        <form method="POST" action="/profile/change_password">
+            <div class="form-section">
+                <span class="form-section-label">Change Your Password</span>
+
+                <div class="form-group">
+                    <label class="form-label">Current Password</label>
+                    <input type="password" class="form-control" name="old_password" placeholder="Enter your current password" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-control" name="new_password" id="newPassword" placeholder="Enter a strong password" required>
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="strengthBar"></div>
+                    </div>
+                    <small class="text-muted d-block mt-2">
+                        Password should be at least 8 characters with uppercase, lowercase, numbers, and special characters.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-control" name="confirm_new_password" placeholder="Confirm your new password" required>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <p><i class="bi bi-shield-check me-2"></i>Use a strong, unique password you don't use anywhere else.</p>
+            </div>
+
+            <button type="submit" class="btn btn-warning">
+                <i class="bi bi-arrow-repeat me-2"></i>Update Password
+            </button>
         </form>
     </div>
 </div>
 
+
+<!-- Danger Zone -->
+<div class="danger-zone">
+    <h6 class="danger-zone-title"><i class="bi bi-exclamation-triangle me-2"></i>Danger Zone</h6>
+    <p class="danger-zone-text">These actions are permanent and cannot be undone.</p>
+    
+    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+        <i class="bi bi-trash me-2"></i>Delete Account
+    </button>
+
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Account Deletion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete your account? This action is permanent.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <form method="POST" action="{{ url_for('delete_account') }}">
+            <button type="submit" class="btn btn-danger">Delete Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Password strength indicator
+    const newPasswordInput = document.getElementById('newPassword');
+    const strengthBar = document.getElementById('strengthBar');
+
+    if (newPasswordInput) {
+        newPasswordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+            strengthBar.classList.remove('weak', 'fair', 'strong');
+            
+            if (strength <= 2) {
+                strengthBar.classList.add('weak');
+            } else if (strength <= 3) {
+                strengthBar.classList.add('fair');
+            } else {
+                strengthBar.classList.add('strong');
+            }
+        });
+    }
+
+    // Populate profile stats (mock data - replace with actual API calls)
+    document.addEventListener('DOMContentLoaded', function() {
+        // These should be replaced with actual data from your backend
+        document.getElementById('total-transactions').textContent = '{{ transaction_count | default(0) }}';
+        document.getElementById('account-balance').textContent = '${{ account_balance | default(0) }}';
+        document.getElementById('monthly-savings').textContent = '${{ monthly_savings | default(0) }}';
+        document.getElementById('budget-health').textContent = '{{ budget_health | default("--") }}%';
+    });
+</script>
 {% endblock %}
