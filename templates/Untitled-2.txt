@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block main %}
+    <main class="container py-5 mt-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card shadow-sm rounded">
+                    <div class="card-body py-5">
+                        <h3 class="text-center mb-4 text-primary fw-bold">Log In</h3>
+
+                        <!-- Flash messages -->
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                <div class="mt-4" id="flash-messages">
+                                    {% for category, message in messages %}
+                                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                            {{ message }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+
+                        <!-- Login form -->
+                        <form action="/login" method="post">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" name="username" placeholder="Username" autocomplete="off" autofocus required>
+                            </div>
+                            <div class="mb-3 position-relative">
+                                <input id="password" type="password" class="form-control" name="password" placeholder="Password" autocomplete="current-password" required>
+                                <i id="togglePassword" class="bi bi-eye-fill" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer;"></i>
+                            </div>
+                            <button class="btn btn-primary w-100" type="submit">Log In</button>
+                        </form>
+
+                        <p class="text-center mt-3">
+                            Don't have an account? <a href="/register">Register</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        // Auto-hide alerts after 3 seconds
+        setTimeout(function() {
+            let alerts = document.querySelectorAll('#flash-messages .alert');
+            alerts.forEach(alert => alert.classList.remove('show'));
+        }, 3000);
+
+            // Automatically hide the alert and remove it from the DOM to collapse the space
+    document.querySelectorAll('.alert').forEach(function(alert) {
+        setTimeout(function() {
+            alert.classList.remove('show');
+            setTimeout(function() {
+                alert.remove();
+            }, 500); // Wait for fade out transition
+        }, 3000); // 3 seconds before starting to hide
+    });
+    </script>
+
+
+{% endblock%}
+
+

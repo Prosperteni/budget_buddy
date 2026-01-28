@@ -1,204 +1,482 @@
 <!doctype html>
 <html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}BudgetBuddy{% endblock %}</title>
 
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{% block title %}BudgetBuddy{% endblock %}</title>
+    <!-- Bootstrap CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
-        <!-- Bootstrap CSS & Icons -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-        {% block extra_css %}{% endblock %}
+    {% block extra_css %}{% endblock %}
 
-        <style>
-            /* Ensure that the alert's container doesn't take space after closing */
-            .alert-dismissible {
-                display: none;
-            }
+    <style>
+        :root {
+            --primary: #0d6efd;
+            --primary-dark: #0b5ed7;
+            --accent: #41b8d5;
+            --success: #198754;
+            --danger: #dc3545;
+            --bg-light: #f8fafc;
+            --bg-lighter: #f0f4f8;
+            --border: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+        }
 
-            .alert-dismissible.show {
-                display: block;
-            }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-            html {
-                height: 100%;
-                scroll-behavior: smooth;
-                margin: 0;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background-color: #f0f4f8;
-            }
+        html {
+            scroll-behavior: smooth;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text-primary);
+        }
 
-            body {
-                display: flex;
-                flex-direction: column;
-                min-height: 100vh;
-            }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: var(--bg-lighter);
+            line-height: 1.6;
+        }
 
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.2; }
+        h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1.3; }
+        h3 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
+        h4 { font-size: 1.25rem; }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        /* NAVBAR STYLING */
+        .navbar {
+            background: linear-gradient(to right, #0d1b2a, #1e3a5f);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            padding: 0.75rem 0;
+        }
+
+        .navbar-brand {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: white !important;
+            transition: transform 0.2s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .navbar-brand svg {
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 8px 16px !important;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .navbar-nav .nav-link.active {
+            color: white !important;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            box-shadow: 0 4px 12px rgba(65, 184, 213, 0.3);
+        }
+
+        /* Auth Buttons */
+        .navbar .btn-outline-light {
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .navbar .btn-outline-light:hover {
+            border-color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+        }
+
+        .navbar .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        }
+
+        .navbar .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark), #0ba5a5);
+        }
+
+        .navbar-toggler {
+            border: none;
+            padding: 8px 12px;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+            outline: 2px solid rgba(255, 255, 255, 0.5);
+            outline-offset: 2px;
+        }
+
+        /* MAIN CONTENT */
+        main {
+            flex: 1;
+            padding-top: 70px;
+        }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(to right, #0d1b2a, #1e3a5f);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        /* CARDS */
+        .card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+            border-color: var(--accent);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .card-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* BUTTONS */
+        .btn {
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 10px 24px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark), #0ba5a5);
+            color: white;
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* FORMS */
+        .form-control {
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* ALERTS */
+        .alert {
+            border: none;
+            border-radius: 10px;
+            border-left: 4px solid;
+        }
+
+        .alert-dismissible {
+            padding-right: 1rem;
+        }
+
+        .btn-close {
+            padding: 0.5rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .btn-close:hover {
+            opacity: 1;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
             main {
-                flex: 1;
-                padding-top: 70px;
+                padding-top: 65px;
             }
 
-            footer {
-                background-color: #212529;
-                color: #aaa;
-                padding: 1.5rem 0;
-                text-align: center;
-            }
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
 
-            .navbar-nav .nav-link {
-                color: white !important;
-                padding: 8px 15px;
-                border-radius: 5px;
-                transition: 0.3s;
-            }
-
-            .navbar-nav .nav-link:hover,
-            .navbar-nav .nav-link.active {
-                background-color: #fff;
-                color: #0d6efd !important;
-            }
-
-            @media (max-width: 576px) {
-                .navbar-nav.d-flex {
-                    flex-wrap: wrap;
-                    gap: 0.5rem;
-                }
-
-                main {
-                    padding-top: 80px;
-                }
+            .navbar-collapse {
+                background: rgba(0, 0, 0, 0.1);
+                padding: 1rem;
+                border-radius: 8px;
+                margin-top: 0.5rem;
             }
 
             .card {
-                width: 100%;
-                /* Make sure the card takes up 100% of its parent container */
-                max-width: 100%;
-                /* Ensure card doesn't exceed the width of its container */
-                margin: 0 auto;
-                /* Center the card horizontally */
-                padding: 20px;
-                /* Optional: add some padding to prevent text from sticking to edges */
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.1rem;
             }
 
-            /* For screens smaller than 576px (Mobile devices) */
-            @media (max-width: 576px) {
-                .card {
-                    padding: 15px;
-                    /* Reduce padding for smaller screens */
-                }
+            h1 { font-size: 1.5rem; }
 
-                .card-body {
-                    padding: 20px;
-                    /* Add space inside the card */
-                }
+            .btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
             }
 
-            /* For tablets or medium-sized screens (576px - 768px) */
-            @media (max-width: 768px) {
-                .card {
-                    max-width: 100%;
-                    /* Ensure it doesn't exceed the width */
-                    padding: 20px;
-                    /* Add padding to make it look better */
-                }
+            .card-body {
+                padding: 1rem;
             }
-        </style>
-    </head>
+        }
 
-    <body>
+        /* ACCESSIBILITY */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
 
-        <!-- NAVBAR -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 128 128" role="img" aria-labelledby="title desc" style="vertical-align: middle;">
-                        <rect x="4" y="4" width="120" height="120" rx="20" fill="#006dd7" />
-                        <polyline points="24,88 48,70 76,82 104,44" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
-                        <circle cx="24" cy="88" r="5" fill="#fff" />
-                        <circle cx="48" cy="70" r="5" fill="#fff" />
-                        <circle cx="76" cy="82" r="5" fill="#fff" />
-                        <circle cx="104" cy="44" r="5" fill="#fff" />
-                    </svg>
-                    <span class="ms-2">BudgetBuddy</span>
-                </a>
+        :focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        /* Utilities */
+        .text-primary { color: var(--primary) !important; }
+        .text-secondary { color: var(--text-secondary) !important; }
+        .bg-light { background-color: var(--bg-light) !important; }
 
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0 d-flex gap-3">
-                        {% if request.path == '/' %}
-                            <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-                        {% else %}
-                            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/#about">About</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/#features">Features</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/#contact">Contact</a></li>
-                        {% endif %}
-                    </ul>
+    </style>
+</head>
 
-                    <ul class="navbar-nav mx-2 mb-2 mb-lg-0 d-flex align-items-center gap-2 ms-2">
-                        {% if current_user.is_authenticated %}
-                            <li class="nav-item"><a class="btn btn-outline-light" href="{{ url_for('logout') }}">Logout</a></li>
-                        {% else %}
-                            <li class="nav-item"><a class="btn btn-outline-light" href="{{ url_for('login') }}">Log In</a></li>
-                            <li class="nav-item"><a class="btn btn-primary" href="{{ url_for('register') }}">Register</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid px-3 px-md-4">
+            <a class="navbar-brand" href="/" title="BudgetBuddy Home">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 128 128" role="img">
+                    <rect x="4" y="4" width="120" height="120" rx="20" fill="#0d6efd" />
+                    <polyline points="24,88 48,70 76,82 104,44" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="24" cy="88" r="5" fill="#fff" />
+                    <circle cx="48" cy="70" r="5" fill="#fff" />
+                    <circle cx="76" cy="82" r="5" fill="#fff" />
+                    <circle cx="104" cy="44" r="5" fill="#fff" />
+                </svg>
+                <span class="ms-2">BudgetBuddy</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 d-flex gap-1">
+                    {% if request.path == '/' %}
+                        <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#features">Features</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#contact">Contact</a></li>
+                    {% endif %}
+                </ul>
+
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center gap-2">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item d-lg-none">
+                            <span class="text-white-50" style="font-size: 0.9rem;">{{ current_user.username }}</span>
+                        </li>
+                        <li class="nav-item"><a class="btn btn-outline-light btn-sm" href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="btn btn-outline-light btn-sm" href="{{ url_for('login') }}">Log In</a></li>
+                        <li class="nav-item"><a class="btn btn-primary btn-sm" href="{{ url_for('register') }}">Register</a></li>
+                    {% endif %}
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <!-- MAIN CONTENT -->
-        <main>{% block main %}{% endblock %}</main>
+    <!-- MAIN CONTENT -->
+    <main>
+        {% block main %}{% endblock %}
+    </main>
 
-        <!-- FOOTER -->
-        <footer>
-            <div class="container text-center">
-                <p class="mb-0">&copy; {{ current_year or 2025 }} BudgetBuddy | Built for CS50 Final Project</p>
-            </div>
-        </footer>
+    <!-- FOOTER -->
+    <footer>
+        <div class="container-fluid">
+            <p>&copy; {{ current_year or 2025 }} BudgetBuddy | Built for CS50 Final Project</p>
+        </div>
+    </footer>
 
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
-        <!-- Smooth scroll for homepage anchors -->
-        <script>
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    if (window.location.pathname === "/") {
-                        e.preventDefault();
-                        const target = document.querySelector(this.getAttribute('href'));
-                        if (target) target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
+    <!-- Smooth scroll for homepage anchors -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if (window.location.pathname === "/") {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarCollapse = document.getElementById("navbarContent");
+            const navLinks = navbarCollapse.querySelectorAll(".nav-link");
+
+            navLinks.forEach(link => {
+                link.addEventListener("click", () => {
+                    if (navbarCollapse.classList.contains("show")) {
+                        new bootstrap.Collapse(navbarCollapse).hide();
                     }
                 });
             });
-            document.addEventListener("DOMContentLoaded", () => {
-                const navbarCollapse = document.getElementById("navbarContent");
-                const navLinks = navbarCollapse.querySelectorAll(".nav-link");
+        });
 
-                navLinks.forEach(link => {
-                    link.addEventListener("click", () => {
-                        // Only collapse if the navbar is currently shown (mobile)
-                        if (navbarCollapse.classList.contains("show")) {
-                            new bootstrap.Collapse(navbarCollapse).hide();
-                        }
-                    });
-                });
+    document.addEventListener("DOMContentLoaded", () => {
+        const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+
+        function setActive(link) {
+            navLinks.forEach(l => l.classList.remove("active"));
+            link.classList.add("active");
+        }
+
+        // Click-based activation
+        navLinks.forEach(link => {
+            link.addEventListener("click", () => {
+                if (link.getAttribute("href").startsWith("#")) {
+                    setActive(link);
+                }
             });
-        </script>
-        {% block extra_js %}{% endblock %}
-    </body>
+        });
+    });
 
+    // Scroll-based activation (optional but professional)
+    const sections = document.querySelectorAll("section[id]");
+    window.addEventListener("scroll", () => {
+        let scrollPosition = document.documentElement.scrollTop || document.body.scrollTop;
+
+        sections.forEach(section => {
+            if (scrollPosition >= section.offsetTop - 80 && scrollPosition < section.offsetTop + section.offsetHeight) {
+                const id = section.getAttribute("id");
+                const activeLink = document.querySelector(`.navbar-nav .nav-link[href="#${id}"]`);
+                if (activeLink) {
+                    document.querySelectorAll(".navbar-nav .nav-link").forEach(link => link.classList.remove("active"));
+                    activeLink.classList.add("active");
+                }
+            }
+        });
+    });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
 </html>

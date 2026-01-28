@@ -1,166 +1,541 @@
 {% extends "layout.html" %}
 
-{% block title %}BudgetBuddy | Smart Personal Finance tracker{% endblock %}
+{% block title %}BudgetBuddy | Smart Personal Finance Tracker{% endblock %}
 
 {% block extra_css %}
 <style>
     /* Hero Section */
     #home {
         background: linear-gradient(135deg, #0d6efd 0%, #41b8d5 100%);
+        background-attachment: fixed;
         color: white;
         text-align: center;
-        padding: 120px 20px 80px 20px;
+        padding: 120px 20px 100px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    #home::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    #home .container {
+        position: relative;
+        z-index: 1;
     }
 
     #home h1 {
-        font-size: 3rem;
-        font-weight: 700;
+        font-size: clamp(2.5rem, 6vw, 3.5rem);
+        font-weight: 800;
+        letter-spacing: -1px;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+        animation: slideInDown 0.8s ease-out;
     }
 
-    #home p.lead {
-        font-size: 1.3rem;
-        opacity: 0.9;
-        margin-bottom: 30px;
+    #home .lead {
+        font-size: clamp(1rem, 2.5vw, 1.3rem);
+        opacity: 0.95;
+        margin-bottom: 2.5rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        animation: slideInUp 0.8s ease-out 0.2s both;
     }
 
     .btn-cta {
-        background-color: #ffffff;
+        background-color: white;
         color: #0d6efd;
-        font-weight: bold;
-        padding: 12px 35px;
-        border-radius: 30px;
-        transition: 0.3s;
+        font-weight: 700;
+        padding: 14px 40px;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        display: inline-block;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        animation: slideInUp 0.8s ease-out 0.4s both;
     }
 
     .btn-cta:hover {
-        background-color: #0b5ed7;
-        color: #fff;
+        background-color: #f0f4f8;
+        color: #0d6efd;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
     }
-     .card {
+
+    /* Animations */
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInScale {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* About Section */
+    #about {
+        background-color: #f8fafc;
+        padding: 100px 20px;
+    }
+
+    #about h2 {
+        margin-bottom: 3rem;
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    #about h2::after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #0d6efd, #41b8d5);
+        border-radius: 2px;
+    }
+
+    .feature-card {
+        background: white;
         border-radius: 12px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        padding: 2rem;
+        height: 100%;
+        text-align: center;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #0d6efd, #41b8d5);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
     }
 
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+    }
 
+    .feature-card:hover::before {
+        transform: scaleX(1);
+    }
 
-    /* Feature Icons */
+    .feature-card-icon {
+        font-size: 2.5rem;
+        color: #0d6efd;
+        margin-bottom: 1rem;
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), rgba(65, 184, 213, 0.1));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .feature-card h5 {
+        font-size: 1.25rem;
+        margin: 1rem 0 0.75rem;
+        color: #1e293b;
+    }
+
+    .feature-card p {
+        color: #64748b;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    /* Features Section */
+    #features {
+        padding: 100px 20px;
+        background: white;
+    }
+
+    #features h2 {
+        margin-bottom: 3rem;
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    #features h2::after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #0d6efd, #41b8d5);
+        border-radius: 2px;
+    }
+
+    .feature-item {
+        text-align: center;
+        padding: 2rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .feature-item:hover {
+        transform: translateY(-4px);
+    }
+
     .feature-icon {
         font-size: 3rem;
         color: #0d6efd;
-        margin-bottom: 15px;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), rgba(65, 184, 213, 0.1));
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    /* Section spacing */
-    section {
-        padding: 80px 0;
+    .feature-item h4 {
+        color: #1e293b;
+        margin: 1rem 0 0.75rem;
+        font-weight: 600;
+    }
+
+    .feature-item p {
+        color: #64748b;
+        font-size: 0.95rem;
+        line-height: 1.6;
     }
 
     /* Contact Section */
+    #contact {
+        padding: 100px 20px;
+        background-color: #f8fafc;
+    }
+
+    #contact h2 {
+        margin-bottom: 3rem;
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    #contact h2::after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #0d6efd, #41b8d5);
+        border-radius: 2px;
+    }
+
     .contact-wrapper {
         background: white;
-        border-radius: 20px;
+        border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e2e8f0;
     }
 
     .contact-info {
-        background: linear-gradient(135deg, #0062cc, #0096ff);
-        padding: 40px;
+        background: linear-gradient(135deg, #0062cc 0%, #0096ff 100%);
+        padding: 3rem;
         color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .contact-info::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    .contact-info > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .contact-info h3 {
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .contact-info p {
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 2rem;
+        line-height: 1.6;
     }
 
     .contact-item {
         display: flex;
-        align-items: center;
-        margin-bottom: 25px;
+        align-items: flex-start;
+        margin-bottom: 2rem;
         transition: all 0.3s ease;
     }
 
     .contact-item:hover {
-        transform: translateX(10px);
+        transform: translateX(8px);
     }
 
     .contact-icon {
-        width: 40px;
-        height: 40px;
-        background: rgba(255,255,255,0.2);
-        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: 15px;
+        margin-right: 1rem;
+        flex-shrink: 0;
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .contact-item:hover .contact-icon {
+        background: white;
+        color: #0062cc;
+        transform: scale(1.1);
+    }
+
+    .contact-item h6 {
+        color: white;
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+    }
+
+    .contact-item p {
+        margin: 0;
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.85);
     }
 
     .social-links {
-        margin-top: 30px;
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .social-links h6 {
+        color: white;
+        margin-bottom: 1rem;
+        font-weight: 600;
     }
 
     .social-icon {
-        width: 35px;
-        height: 35px;
-        background: rgba(255,255,255,0.2);
-        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        margin-right: 10px;
+        margin-right: 12px;
         transition: all 0.3s ease;
+        color: white;
+        font-size: 1.1rem;
     }
 
     .social-icon:hover {
         background: white;
         color: #0062cc;
-        transform: translateY(-3px);
+        transform: translateY(-4px) scale(1.1);
     }
 
     .contact-form {
-        padding: 40px;
+        padding: 3rem;
     }
 
-    .form-control {
-        border-radius: 10px;
-        padding: 12px 15px;
-        border: 2px solid #eee;
-        transition: all 0.3s ease;
+    .contact-form h3 {
+        font-size: 1.75rem;
+        margin-bottom: 2rem;
+        color: #1e293b;
     }
 
-    .form-control:focus {
-        border-color: #0062cc;
-        box-shadow: none;
+    .form-group {
+        margin-bottom: 1.5rem;
     }
 
     .form-label {
-        font-weight: 500;
-        margin-bottom: 8px;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.75rem;
+        display: block;
+        font-size: 0.95rem;
+    }
+
+    .form-control {
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 140px;
     }
 
     .btn-submit {
-        background: linear-gradient(135deg, #0062cc, #0096ff);
+        background: linear-gradient(135deg, #0062cc 0%, #0096ff 100%);
         border: none;
-        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        padding: 14px 32px;
         border-radius: 10px;
         transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 1rem;
     }
 
     .btn-submit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,98,204,0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0, 98, 204, 0.3);
     }
 
-    .map-container {
-        height: 200px;
-        border-radius: 10px;
-        overflow: hidden;
-        margin-top: 20px;
+    /* Section spacing */
+    section {
+        scroll-margin-top: 70px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        #home {
+            padding: 80px 20px 60px;
+        }
+
+        #home h1 {
+            font-size: 2rem;
+        }
+
+        #about, #features, #contact {
+            padding: 60px 20px;
+        }
+
+        #about h2::after, #features h2::after, #contact h2::after {
+            bottom: -10px;
+        }
+
+        .feature-card {
+            padding: 1.5rem;
+        }
+
+        .contact-wrapper {
+            border-radius: 12px;
+        }
+
+        .contact-info, .contact-form {
+            padding: 2rem;
+        }
+
+        .contact-form h3 {
+            font-size: 1.5rem;
+        }
+
+        .row.g-0 {
+            flex-direction: column;
+        }
+    }
+
+    @media (max-width: 576px) {
+        #home h1 {
+            font-size: 1.5rem;
+        }
+
+        #home .lead {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-cta {
+            padding: 12px 32px;
+            font-size: 0.95rem;
+        }
+
+        .feature-card-icon, .feature-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 1.75rem;
+        }
+
+        .contact-info, .contact-form {
+            padding: 1.5rem;
+        }
+
+        .contact-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
     }
 </style>
-
-
-
 {% endblock %}
 
 {% block main %}
@@ -169,176 +544,170 @@
 <section id="home">
     <div class="container">
         <h1>Take Control of Your Money</h1>
-        <p class="lead">A simple, powerful finance manager that helps you understand where your money goes.</p>
-        <a href="/register" class="btn btn-cta">Get Started</a>
+        <p class="lead">A smart, intuitive finance manager that helps you understand where your money goes and take control of your financial future.</p>
+        <a href="/register" class="btn btn-cta">Get Started Free</a>
     </div>
 </section>
 
 <!-- About Section -->
-<section id="about" class="bg-light">
+<section id="about">
     <div class="container">
-        <h2 class="text-center mb-5 text-primary">Why BudgetBuddy?</h2>
+        <h2 class="text-center text-primary mb-5">Why Choose BudgetBuddy?</h2>
         <div class="row g-4">
-
-            <!-- Card 1: Track & Analyze -->
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fas fa-chart-line fa-2x mb-3 text-primary"></i>
-                        <h5 class="card-title">Track & Analyze</h5>
-                        <p class="card-text">
-                            Monitor your expenses in real time and visualize spending patterns
-                            with clean dashboards and analytics designed to give you clarity.
-                        </p>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="bi bi-graph-up-arrow"></i>
                     </div>
+                    <h5>Track & Analyze</h5>
+                    <p>Monitor expenses in real time and visualize spending patterns with clear, actionable dashboards.</p>
                 </div>
             </div>
 
-            <!-- Card 2: Budget Smarter -->
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fas fa-wallet fa-2x mb-3 text-primary"></i>
-                        <h5 class="card-title">Budget Smarter</h5>
-                        <p class="card-text">
-                            Set spending limits, categorize transactions, and stay on top of
-                            your monthly budget with intuitive tools that keep you in control.
-                        </p>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="fas fa-wallet"></i>
                     </div>
+                    <h5>Budget Smarter</h5>
+                    <p>Set spending limits, categorize transactions, and maintain control with intuitive budgeting tools.</p>
                 </div>
             </div>
 
-            <!-- Card 3: Secure & Accessible -->
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fas fa-cloud fa-2x mb-3 text-primary"></i>
-                        <h5 class="card-title">Secure & Accessible</h5>
-                        <p class="card-text">
-                            Sync your data securely across devices. Access your financial
-                            insights anytime, anywhere, with confidence and peace of mind.
-                        </p>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="bi bi-cloud-check"></i>
                     </div>
+                    <h5>Secure & Accessible</h5>
+                    <p>Sync data securely across devices. Access insights anytime, anywhere with full privacy.</p>
                 </div>
             </div>
 
-            <!-- Card 4: Smart Alerts -->
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fas fa-bell fa-2x mb-3 text-primary"></i>
-                        <h5 class="card-title">Smart Alerts</h5>
-                        <p class="card-text">
-                            Get personalized notifications when you approach spending limits
-                            or when unusual activity is detected, helping you stay proactive.
-                        </p>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="fas fa-bell"></i>
                     </div>
+                    <h5>Smart Alerts</h5>
+                    <p>Get notified when approaching limits or unusual activity is detected. Stay proactive, not reactive.</p>
                 </div>
             </div>
 
-            <!-- Card 5: Actionable Insights -->
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fas fa-lightbulb fa-2x mb-3 text-primary"></i>
-                        <h5 class="card-title">Actionable Insights</h5>
-                        <p class="card-text">
-                            BudgetBuddy turns complex data into simple, actionable insights
-                            so you can make smarter financial decisions every day.
-                        </p>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="fas fa-lightbulb"></i>
                     </div>
+                    <h5>Actionable Insights</h5>
+                    <p>Turn complex financial data into simple, actionable recommendations for smarter decisions.</p>
                 </div>
             </div>
 
-            <!-- Card 6: Confidence & Control -->
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fas fa-hand-holding-usd fa-2x mb-3 text-primary"></i>
-                        <h5 class="card-title">Confidence & Control</h5>
-                        <p class="card-text">
-                            Gain confidence in your financial decisions. BudgetBuddy empowers
-                            you to manage money proactively and take control of your future.
-                        </p>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
                     </div>
+                    <h5>Confidence & Control</h5>
+                    <p>Gain complete confidence in your financial decisions and take full control of your future.</p>
                 </div>
             </div>
-
         </div>
     </div>
 </section>
 
-
 <!-- Features Section -->
-<section id="features" class="bg-white">
+<section id="features">
     <div class="container">
-        <h2 class="text-center mb-5 text-primary">Features</h2>
-        <div class="row text-center g-4">
-
+        <h2 class="text-center text-primary mb-5">Powerful Features</h2>
+        <div class="row text-center g-4 mb-5">
             <div class="col-md-4">
-                <i class="bi bi-graph-up-arrow feature-icon"></i>
-                <h4>Smart Analytics</h4>
-                <p>Analyze spending patterns, monthly cash flow, and category-wise breakdowns with clear charts.</p>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <h4>Smart Analytics</h4>
+                    <p>Analyze spending patterns, monthly cash flow, and category breakdowns with intuitive visualizations.</p>
+                </div>
             </div>
 
             <div class="col-md-4">
-                <i class="bi bi-wallet2 feature-icon"></i>
-                <h4>Track Every Transaction</h4>
-                <p>Easily log incomes and expenses, categorize them, and view historical data anytime.</p>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-wallet2"></i>
+                    </div>
+                    <h4>Transaction Tracking</h4>
+                    <p>Log incomes and expenses effortlessly, categorize them, and review historical data on demand.</p>
+                </div>
             </div>
 
             <div class="col-md-4">
-                <i class="bi bi-file-earmark-text feature-icon"></i>
-                <h4>Generate Reports</h4>
-                <p>Export your financial summaries as PDF reports for your personal records or budgeting.</p>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+                    <h4>Export Reports</h4>
+                    <p>Generate detailed PDF reports of your financial summaries for personal records.</p>
+                </div>
             </div>
-
         </div>
 
-        <div class="row text-center mt-4 g-4">
+        <div class="row text-center g-4">
             <div class="col-md-4">
-                <i class="bi bi-shield-lock feature-icon"></i>
-                <h4>Secure & Private</h4>
-                <p>Your data stays yours. Password-protected accounts with secure hashing.</p>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                    <h4>Secure & Private</h4>
+                    <p>Your data is completely yours. Password-protected with industry-standard encryption.</p>
+                </div>
             </div>
 
             <div class="col-md-4">
-                <i class="bi bi-phone feature-icon"></i>
-                <h4>Mobile-Friendly UI</h4>
-                <p>Designed to work seamlessly on all screen sizes — phones, tablets, and desktop.</p>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-phone"></i>
+                    </div>
+                    <h4>Mobile-Friendly</h4>
+                    <p>Responsive design works perfectly on phones, tablets, and desktops.</p>
+                </div>
             </div>
 
             <div class="col-md-4">
-                <i class="bi bi-brush feature-icon"></i>
-                <h4>Clean User Experience</h4>
-                <p>Minimalistic, intuitive layout that makes finance management effortless.</p>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-brush"></i>
+                    </div>
+                    <h4>Intuitive Design</h4>
+                    <p>Minimalist, clean interface that makes finance management effortless and enjoyable.</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Contact Section -->
-<section id="contact" class="py-5 bg-light">
-    <div class="container py-4">
-        <h2 class="text-center mb-5 text-primary">Contact</h2>
+<section id="contact">
+    <div class="container">
+        <h2 class="text-center text-primary mb-5">Get in Touch</h2>
         <div class="row g-0 justify-content-center">
             <div class="col-lg-10">
                 <div class="contact-wrapper">
                     <div class="row g-0">
-
                         <!-- Contact Info -->
                         <div class="col-md-5">
                             <div class="contact-info h-100">
-                                <h3 class="mb-4">Get in touch</h3>
-                                <p class="mb-4">We'd love to hear from you. Please fill out the form or contact us using the information below.</p>
+                                <h3>Contact Us</h3>
+                                <p>We'd love to hear from you. Reach out using the form or contact us directly.</p>
 
                                 <div class="contact-item">
                                     <div class="contact-icon">
                                         <i class="fas fa-map-marker-alt"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0">Address</h6>
-                                        <p class="mb-0">123 Business Avenue, Suite 100<br>New York, NY 10001</p>
+                                        <h6>Address</h6>
+                                        <p>123 Business Avenue, Suite 100<br>New York, NY 10001</p>
                                     </div>
                                 </div>
 
@@ -347,8 +716,8 @@
                                         <i class="fas fa-phone"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0">Phone</h6>
-                                        <p class="mb-0">+1 (555) 123-4567</p>
+                                        <h6>Phone</h6>
+                                        <p>+1 (555) 123-4567</p>
                                     </div>
                                 </div>
 
@@ -357,17 +726,17 @@
                                         <i class="fas fa-envelope"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0">Email</h6>
-                                        <p class="mb-0">contact@company.com</p>
+                                        <h6>Email</h6>
+                                        <p>contact@company.com</p>
                                     </div>
                                 </div>
 
                                 <div class="social-links">
-                                    <h6 class="mb-3">Follow Us</h6>
-                                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-                                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                                    <h6>Follow Us</h6>
+                                    <a href="#" class="social-icon" title="Facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="#" class="social-icon" title="Twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                                    <a href="#" class="social-icon" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                    <a href="#" class="social-icon" title="Instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -375,40 +744,42 @@
                         <!-- Contact Form -->
                         <div class="col-md-7">
                             <div class="contact-form">
-                                <h3 class="mb-4">Send us a message</h3>
+                                <h3>Send us a message</h3>
                                 <form method="POST" action="{{ url_for('index') }}">
-                                    <div class="row g-3">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">First Name</label>
-                                            <input type="text" class="form-control" name="first_name" required>
+                                    <div class="row g-3 mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">First Name</label>
+                                                <input type="text" class="form-control" name="first_name" required>
+                                            </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Last Name</label>
-                                            <input type="text" class="form-control" name="last_name" required>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Last Name</label>
+                                                <input type="text" class="form-control" name="last_name" required>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label class="form-label">Email</label>
+                                    <div class="form-group">
+                                        <label class="form-label">Email Address</label>
                                         <input type="email" class="form-control" name="email" required>
                                     </div>
 
-                                    <div class="mb-3">
+                                    <div class="form-group">
                                         <label class="form-label">Subject</label>
                                         <input type="text" class="form-control" name="subject" required>
                                     </div>
 
-                                    <div class="mb-4">
+                                    <div class="form-group">
                                         <label class="form-label">Message</label>
-                                        <textarea class="form-control" rows="5" name="message"
-                                                  placeholder="Your message here..." required></textarea>
+                                        <textarea class="form-control" name="message" placeholder="Tell us what's on your mind..." required></textarea>
                                     </div>
 
-                                    <button type="submit" class="btn btn-submit text-white">Send Message</button>
+                                    <button type="submit" class="btn btn-submit">Send Message</button>
                                 </form>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
