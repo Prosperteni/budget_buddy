@@ -217,6 +217,7 @@ def dashboard():
         total_income=total_income,
         total_expenses=total_expenses,
         balance=balance,
+        current_year=datetime.now().year,
         transactions=transactions,
         user=current_user
     )
@@ -319,7 +320,7 @@ def transactions():
 
     transactions = format_transactions(transactions)
 
-    return render_template("transactions.html", transactions=transactions, user=current_user)
+    return render_template("transactions.html", transactions=transactions, current_year=datetime.now().year, user=current_user)
 
 
 @app.route('/delete_transaction/<int:txn_id>', methods=['POST'])
@@ -386,6 +387,7 @@ def analytics():
                            balance=balance,
                            category_expenses=category_expenses,
                            avg_expense=avg_expense,
+                           current_year=datetime.now().year,
                            user=current_user)
 
 
@@ -456,7 +458,9 @@ def profile():
         cur.execute("SELECT * FROM users WHERE id=?", (user_id,))
         user = cur.fetchone()
 
-    return render_template("profile.html", user=user)
+    return render_template("profile.html",
+                            current_year=datetime.now().year,
+                            user=user)
 
 
 @app.route('/change_password', methods=['GET', 'POST'])
