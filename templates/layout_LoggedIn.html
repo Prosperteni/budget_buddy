@@ -11,7 +11,20 @@
 
     {% block extra_css %}{% endblock %}
 
-    <style>
+    <style> 
+        :root {
+        --primary: #0d6efd;
+        --accent: #41b8d5;
+        --success: #198754;
+        --danger: #dc3545;
+        --warning: #ffc107;
+        --info: #0dcaf0;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --bg-light: #f8fafc;
+        --border: #e2e8f0;
+    }
+
         body {
             background-color: #f8f9fa;
             min-height: 100vh;
@@ -47,6 +60,17 @@
             flex: 1;
         }
 
+        :root {
+        --primary: #0d6efd;
+        --accent: #41b8d5;
+        --success: #198754;
+        --danger: #dc3545;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --bg-light: #f8fafc;
+        --border: #e2e8f0;
+        }
+
         @media (max-width: 992px) {
             .content {
                 margin-left: 0;
@@ -54,6 +78,10 @@
             }
         }
     </style>
+
+    
+
+
 </head>
 
 <body>
