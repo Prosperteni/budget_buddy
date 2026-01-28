@@ -60,15 +60,28 @@
             flex: 1;
         }
 
-        :root {
-        --primary: #0d6efd;
-        --accent: #41b8d5;
-        --success: #198754;
-        --danger: #dc3545;
-        --text-primary: #1e293b;
-        --text-secondary: #64748b;
-        --bg-light: #f8fafc;
-        --border: #e2e8f0;
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        }
+
+        .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+        background: linear-gradient(135deg, #0b5ed7, #0ba5a5);
+        color: white;
+        }
+
+        .btn-secondary {
+        background: var(--text-secondary);
+        color: white;
+        }
+
+        .btn-secondary:hover {
+        background: #5a6b7a;
+        color: white;
+        transform: translateY(-2px);
         }
 
         @media (max-width: 992px) {
