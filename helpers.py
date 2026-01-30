@@ -138,7 +138,30 @@ def format_transactions(transactions):
     transactions = [dict(txn) for txn in transactions]
     for txn in transactions:
         txn["date"] = txn["date"].split(" ")[0]
+
+        # capitalize category and type
+        txn["category"] = txn.get("category", "").title()
+        txn["type"] = txn.get("type", "").title()
+        txn["description"] = txn.get("description", "").strip()
+        
     return transactions
+
+def get_category_summary(transactions):
+    """Get spending breakdown by category"""
+    category_summary = {}
+    
+    for txn in transactions:
+        if txn.get("type") == "expense":
+            category = txn.get("category", "Uncategorized")
+            amount = float(txn.get("amount", 0))
+            
+            if category not in category_summary:
+                category_summary[category] = 0
+            category_summary[category] += amount
+    
+    # Sort by amount (descending)
+    return dict(sorted(category_summary.items(), key=lambda x: x[1], reverse=True))
+
 
 def get_last_month_expenses(user_id):
     """
