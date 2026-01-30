@@ -1,7 +1,7 @@
 from flask import Flask, flash, redirect, render_template, request, url_for, Blueprint, send_file, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
-from helpers import build_transaction_pdf, get_transaction_data, get_transaction_summary, format_transactions, get_last_month_expenses
+from helpers import build_transaction_pdf, get_transaction_data, get_transaction_summary, format_transactions, get_last_month_expenses, build_transaction_pdf
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user, UserMixin
 import tempfile
 from collections import defaultdict
@@ -551,6 +551,10 @@ def download_report():
     user_id = current_user.id
 
     transactions = get_transaction_data(user_id)
+    if not transactions:
+        flash('No transactions available. Add some transactions to generate a report.', 'info')
+        return redirect(url_for('dashboard'))
+
     transactions = format_transactions(transactions)
     total_income, total_expenses, balance = get_transaction_summary(user_id)
 
