@@ -1,7 +1,7 @@
 from flask import Flask, flash, redirect, render_template, request, url_for, Blueprint, send_file, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
-from helpers import build_transaction_pdf, get_transaction_data, get_transaction_summary, format_transactions, get_last_month_expenses, build_transaction_pdf
+from helpers import build_transaction_pdf, get_transaction_data, get_transaction_summary, format_transactions, get_last_month_expenses, build_transaction_pdf, calculate_financial_health
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user, UserMixin
 import tempfile
 from collections import defaultdict
@@ -458,10 +458,23 @@ def profile():
         cur.execute("SELECT * FROM users WHERE id=?", (user_id,))
         user = cur.fetchone()
 
+     # Calculate totals (example queries)
+        cur.execute("SELECT SUM(amount) FROM transactions WHERE user_id=? AND type='income'", (user_id,))
+        total_income = cur.fetchone()[0]
+       
+        cur.execute("SELECT SUM(amount) FROM transactions WHERE user_id=? AND type='expenses'", (user_id,))
+        total_expenses = cur.fetchone()[0]
+
+    financial_health = calculate_financial_health(
+        total_income, total_expenses
+    )
+
+
+
     return render_template("profile.html",
                             current_year=datetime.now().year,
-                            user=user)
-
+                            user=user,
+                            financial_health=financial_health)
 
 @app.route('/change_password', methods=['GET', 'POST'])
 @login_required

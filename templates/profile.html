@@ -418,8 +418,12 @@
             <span class="stat-item-label">Monthly Savings</span>
         </div>
         <div class="stat-item">
-            <span class="stat-item-value" id="budget-health">--</span>
-            <span class="stat-item-label">Budget Health</span>
+            <span class="stat-item-value" id="financial-health">
+                <h2 class="fw-bold text-danger">
+                    {{ financial_health | default("--") }}%
+                </h2>
+            </span>
+            <span class="stat-item-label">Financial Health</span>
         </div>
     </div>
 </div>
@@ -617,7 +621,6 @@
         document.getElementById('total-transactions').textContent = '{{ transaction_count | default(0) }}';
         document.getElementById('account-balance').textContent = '${{ account_balance | default(0) }}';
         document.getElementById('monthly-savings').textContent = '${{ monthly_savings | default(0) }}';
-        document.getElementById('budget-health').textContent = '{{ budget_health | default("--") }}%';
     });
 </script>
 {% endblock %}

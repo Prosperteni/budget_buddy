@@ -346,12 +346,6 @@ def format_transactions(transactions):
     transactions = [dict(txn) for txn in transactions]
     for txn in transactions:
         txn["date"] = txn["date"].split(" ")[0]
-
-        # capitalize category and type
-        txn["category"] = txn.get("category", "").title()
-        txn["type"] = txn.get("type", "").title()
-        txn["description"] = txn.get("description", "").strip()
-        
     return transactions
 
 def get_category_summary(transactions):
@@ -382,3 +376,17 @@ def get_last_month_expenses(user_id):
         cur.execute("SELECT SUM(amount) FROM transactions WHERE user_id=? AND type='expenses' AND strftime('%m', date) = ?", (user_id, last_month))
         result = cur.fetchone()
     return result[0] if result[0] else 0
+
+def calculate_financial_health(total_income, total_expenses):
+    """
+    Simple financial health calculation based on income and expenses.
+    """
+    if total_income == 0:
+        return "No Income Data"
+    expense_ratio = total_expenses / total_income
+    if expense_ratio < 0.5:
+        return "Good"
+    elif expense_ratio < 0.75:
+        return "Average"
+    else:
+        return "Poor"
