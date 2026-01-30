@@ -465,16 +465,23 @@ def profile():
         cur.execute("SELECT SUM(amount) FROM transactions WHERE user_id=? AND type='expenses'", (user_id,))
         total_expenses = cur.fetchone()[0]
 
-    financial_health = calculate_financial_health(
-        total_income, total_expenses
-    )
+    score = calculate_financial_health(total_income, total_expenses)
 
-
+    if score is None:
+        health_status = "none"
+    elif score >= 80:
+        health_status = "good"
+    elif score >= 40:
+        health_status = "average"
+    else:
+        health_status = "poor"
 
     return render_template("profile.html",
                             current_year=datetime.now().year,
                             user=user,
-                            financial_health=financial_health)
+                            financial_health_score=score,
+                            health_status=health_status)
+
 
 @app.route('/change_password', methods=['GET', 'POST'])
 @login_required

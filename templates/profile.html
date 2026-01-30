@@ -418,13 +418,23 @@
             <span class="stat-item-label">Monthly Savings</span>
         </div>
         <div class="stat-item">
-            <span class="stat-item-value" id="financial-health">
-                <h2 class="fw-bold text-danger">
-                    {{ financial_health | default("--") }}%
-                </h2>
-            </span>
-            <span class="stat-item-label">Financial Health</span>
-        </div>
+    <span class="stat-item-value">
+        <h2 class="fw-bold
+        {% if financial_health_score is not none %}
+            {% if financial_health_score > 70 %}text-success
+            {% elif financial_health_score > 40 %}text-warning
+            {% else %}text-danger
+            {% endif %}
+        {% else %}
+            text-secondary
+        {% endif %}">
+    {{ financial_health_score if financial_health_score is not none else "--" }}%
+</h2>
+
+    </span>
+    <span class="stat-item-label">Financial Health</span>
+</div>
+
     </div>
 </div>
 

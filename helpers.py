@@ -379,14 +379,25 @@ def get_last_month_expenses(user_id):
 
 def calculate_financial_health(total_income, total_expenses):
     """
-    Simple financial health calculation based on income and expenses.
+    Calculate a financial health score as 0-100 based on income and expenses.
+
+    Returns:
+        int: health score from 0 (worst) to 100 (best)
+        None: if there is no data at all
     """
+
+    total_expenses = total_expenses or 0
+    total_income = total_income or 0
+    # No transactions at all
+    if total_income == 0 and total_expenses == 0:
+        return None
+
+    # No income (only expenses)
     if total_income == 0:
-        return "No Income Data"
+        return 0  
+
     expense_ratio = total_expenses / total_income
-    if expense_ratio < 0.5:
-        return "Good"
-    elif expense_ratio < 0.75:
-        return "Average"
-    else:
-        return "Poor"
+
+    # Health score decreases as expenses increase
+    health_score = max(0, 100 - int(expense_ratio * 100))
+    return health_score
