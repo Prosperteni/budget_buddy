@@ -149,6 +149,11 @@
 {% block scripts %}
 
         <script>
+            // Auto-hide alerts after 3 seconds
+            setTimeout(function() {
+                let alerts = document.querySelectorAll('#flash-messages .alert');
+                alerts.forEach(alert => alert.classList.remove('show'));
+            }, 3000);
             // Line chart for Income and Expense Trends
             const ctx = document.getElementById('trendChart').getContext('2d');
 
