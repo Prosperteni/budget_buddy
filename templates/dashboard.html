@@ -4,20 +4,6 @@
 
 {% block content %}
 
-                <!-- Flash messages -->
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        <div id="flash-messages" class="mt-3">
-                            {% for category, message in messages %}
-                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                {% endwith %}
-
                 <!-- Header -->
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
                     <div>
@@ -149,11 +135,7 @@
 {% block scripts %}
 
         <script>
-            // Auto-hide alerts after 3 seconds
-            setTimeout(function() {
-                let alerts = document.querySelectorAll('#flash-messages .alert');
-                alerts.forEach(alert => alert.classList.remove('show'));
-            }, 3000);
+
             // Line chart for Income and Expense Trends
             const ctx = document.getElementById('trendChart').getContext('2d');
 
